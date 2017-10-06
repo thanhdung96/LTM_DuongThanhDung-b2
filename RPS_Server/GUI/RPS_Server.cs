@@ -1,11 +1,14 @@
-﻿using System;
-using System.Text;
-using RPS_Server.Signal;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using RPS_Server.Signal;
+using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Windows.Forms;
 
+/*
+ * Client play the game first
+ * then the server
+ * Communicating using only 1 byte of signal
+ */
 namespace RPS_Server.GUI
 {
 	public partial class RPS_ServerForm : Form
@@ -27,6 +30,7 @@ namespace RPS_Server.GUI
 
 			setInit();
 			startListening();
+			startGame();
 		}
 
 		private void setInit()
@@ -36,11 +40,12 @@ namespace RPS_Server.GUI
 			server = new TcpListener(IPAddress.Any, 1724);		//server will receive any connection to any interface, port 1724
 			sendBuffer = new byte[1024];		//init buffer send to client, 1Kb
 			receiveBuffer = new byte[1024];		//init buffer receive from client, 1Kb
+
 			//init game
 			Console.WriteLine("Server initialising game");
-			mySelection = Signal_Server.SERVER_NEUTRAL;
+			mySelection = Signal_Game.NEUTRAL;
 			myResult = Signal_Game.DRAW;
-			opponentSelection = Signal_Client.CLIENT_NEUTRAL;
+			opponentSelection = Signal_Game.NEUTRAL;
 		}
 
 		private void startListening()
@@ -48,23 +53,44 @@ namespace RPS_Server.GUI
 			Console.WriteLine("Server start listening");
 			server.Start();		//server start listening
 			client = server.AcceptTcpClient();
-			Console.WriteLine("Server accepted a client");
+			dataStream = client.GetStream();
+			Console.WriteLine("Server accepted a client and ready to communicate");
+		}
 
+		private void startGame()
+		{
+			//throw new NotImplementedException();
+			sendSignalToClient(Signal_Game.START);
+		}
+
+		private void sendSignalToClient(byte signal)
+		{
+			dataStream.WriteByte(Signal_Client.CLIENT_SEND_REQ);		//request to send to client
+			signalReceive = receiveSignalFromClient();					//receive respond from client after request
+			if(signalReceive == Signal_Client.CLIENT_ACK)				//if client acknowledged
+			{
+				dataStream.WriteByte(signal);
+			}
+		}
+
+		private byte receiveSignalFromClient()
+		{
+			return Convert.ToByte(dataStream.ReadByte());		//read 1 byte of signal from client
 		}
 
 		private void btnScissor_Click(object sender, EventArgs e)
 		{
-			mySelection = Signal_Server.SERVER_SCISSOR;
+			mySelection = Signal_Game.SCISSOR;
 		}
 
 		private void btnPaper_Click(object sender, EventArgs e)
 		{
-			mySelection = Signal_Server.SERVER_PAPER;
+			mySelection = Signal_Game.PAPER;
 		}
 
 		private void btnRock_Click(object sender, EventArgs e)
 		{
-			mySelection = Signal_Server.SERVER_ROCK;
+			mySelection = Signal_Game.ROCK;
 		}
 	}
 }
