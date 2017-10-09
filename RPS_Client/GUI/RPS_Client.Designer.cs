@@ -47,6 +47,7 @@
 			this.btnRock.TabIndex = 17;
 			this.btnRock.Text = "Rock";
 			this.btnRock.UseVisualStyleBackColor = true;
+			this.btnRock.Click += new System.EventHandler(this.btnRock_Click);
 			// 
 			// btnPaper
 			// 
@@ -56,6 +57,7 @@
 			this.btnPaper.TabIndex = 16;
 			this.btnPaper.Text = "Paper";
 			this.btnPaper.UseVisualStyleBackColor = true;
+			this.btnPaper.Click += new System.EventHandler(this.btnPaper_Click);
 			// 
 			// txtOpponent
 			// 
@@ -82,6 +84,7 @@
 			this.btnScissor.TabIndex = 13;
 			this.btnScissor.Text = "Scissor";
 			this.btnScissor.UseVisualStyleBackColor = true;
+			this.btnScissor.Click += new System.EventHandler(this.btnScissor_Click);
 			// 
 			// txtResult
 			// 
@@ -117,7 +120,7 @@
 			this.label1.TabIndex = 9;
 			this.label1.Text = "Selection";
 			// 
-			// RPS_Client
+			// RPS_ClientForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,7 +134,7 @@
 			this.Controls.Add(this.txtSelection);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Name = "RPS_Client";
+			this.Name = "RPS_ClientForm";
 			this.Text = "RPS_Client";
 			this.ResumeLayout(false);
 			this.PerformLayout();
